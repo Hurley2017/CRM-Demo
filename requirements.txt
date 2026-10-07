@@ -3,5 +3,6 @@ Flask-SQLAlchemy>=3.1
 Flask-CORS>=4.0
 python-dotenv>=1.0
 tzdata>=2024.1            # IANA zone names for zoneinfo (servers may ship none)
+psycopg[binary]>=3.2      # Postgres driver for Vercel's Neon integration (DATABASE_URL)
 gunicorn>=21.0
 pytest>=8.0

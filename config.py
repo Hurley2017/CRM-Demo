@@ -20,11 +20,19 @@ def _default_database_url() -> str:
 
 
 def _database_url() -> str:
-    url = (os.environ.get("DATABASE_URL") or "").strip()
-    # Managed Postgres integrations (Neon, Vercel Postgres, ...) still emit
-    # the legacy scheme; SQLAlchemy 2 removed the `postgres://` alias.
+    # Vercel's Postgres (Neon) marketplace integration injects DATABASE_URL;
+    # older stores called it POSTGRES_URL. Either beats the local SQLite file.
+    url = (
+        os.environ.get("DATABASE_URL")
+        or os.environ.get("POSTGRES_URL")
+        or ""
+    ).strip()
+    # Managed integrations still emit the legacy scheme, and SQLAlchemy 2 needs
+    # an explicit driver - requirements.txt ships psycopg (v3).
     if url.startswith("postgres://"):
         url = "postgresql://" + url[len("postgres://"):]
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://"):]
     return url or _default_database_url()
 
 

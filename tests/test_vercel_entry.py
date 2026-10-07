@@ -101,3 +101,33 @@ def test_vercel_entry_reuses_configured_database(tmp_path):
     )
     assert proc.returncode == 0, f"stderr:\n{proc.stderr}"
     assert f"DB=sqlite:///{(tmp_path / 'explicit.db').as_posix()}" in proc.stdout
+
+
+def test_database_url_normalizes_managed_postgres(monkeypatch):
+    """Vercel's Neon integration hands over `postgres://`; SQLAlchemy 2 needs
+    an explicit driver, and psycopg (v3) is what we ship."""
+    from config import _database_url
+
+    monkeypatch.setenv(
+        "DATABASE_URL", "postgres://user:pass@ep-abc.aws.neon.tech/neondb?sslmode=require"
+    )
+    monkeypatch.delenv("POSTGRES_URL", raising=False)
+    assert _database_url() == (
+        "postgresql+psycopg://user:pass@ep-abc.aws.neon.tech/neondb?sslmode=require"
+    )
+
+
+def test_database_url_falls_back_to_postgres_url(monkeypatch):
+    from config import _database_url
+
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setenv("POSTGRES_URL", "postgresql://user:pass@host/db")
+    assert _database_url() == "postgresql+psycopg://user:pass@host/db"
+
+
+def test_database_url_defaults_to_local_sqlite(monkeypatch):
+    from config import _database_url
+
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("POSTGRES_URL", raising=False)
+    assert _database_url().endswith("/suraksha.db")

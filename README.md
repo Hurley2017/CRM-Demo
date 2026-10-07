@@ -183,24 +183,34 @@ finds Flask from `requirements.txt` and the entry point from `api/index.py`.
 | Variable | Required | Notes |
 |---|---|---|
 | `SECRET_KEY` | **yes** | Long random string — signs the session cookie |
-| `DATABASE_URL` | no | Durable database; see below |
+| `DATABASE_URL` | auto | Injected by the Neon integration (see below) |
 | `TIMEZONE` | no | Defaults to `Asia/Kolkata` |
 | `SESSION_COOKIE_SECURE` | no | Defaults to `1` on Vercel (HTTPS) |
 | `CORS_ORIGINS` | no | Not needed — API and SPA share the origin |
 
-**How the database works on Vercel.** The deployment bundle is read-only, so
-without a `DATABASE_URL` the entry point points SQLite at `/tmp/suraksha.db`
-and, on first boot, seeds the full demo dataset (about 3 s — one transaction,
-safe against concurrent cold starts). `/tmp` lives for the lifetime of one
-function instance, so **data resets on cold starts**: perfect for a demo, not
-for production.
+**Database — use Vercel's built-in Postgres integration.** After the first
+deploy:
 
-For durable data set `DATABASE_URL` to a managed database (Neon, Supabase,
-Turso, …) and add its driver to `requirements.txt` (e.g. `psycopg[binary]` for
-Postgres, `sqlalchemy-libsql` for Turso). The legacy `postgres://` scheme is
-normalised to `postgresql://` automatically. A first boot against an *empty*
-cloud database seeds the demo dataset too — sign in with
-`EMP-1001 / Admin@123`, then change the passwords.
+1. In the project dashboard open **Storage → Marketplace → Neon (Postgres)**
+   and create/connect a database (pick a region close to your function region).
+2. Vercel injects `DATABASE_URL` (plus `DATABASE_URL_UNPOOLED`, `POSTGRES_URL`
+   and the legacy `PG*` variables) into the project automatically.
+3. Deploy again — the first boot against the empty database seeds the demo
+   dataset in one transaction, so `EMP-1001 / Admin@123` signs in immediately.
+   Change the demo passwords afterwards.
+
+The `psycopg` (v3) driver ships in `requirements.txt`, and `postgres://` or
+bare `postgresql://` connection strings are normalised to
+`postgresql+psycopg://` automatically, so the injected URL works as-is.
+
+**Without a `DATABASE_URL`** (e.g. before the Storage integration is
+connected) the entry point points SQLite at `/tmp/suraksha.db` — the bundle is
+read-only — and seeds the demo dataset on first boot (about 3 s, one
+transaction, safe against concurrent cold starts). `/tmp` lives for the
+lifetime of one function instance, so **data resets on cold starts**: a
+convenient zero-config demo, not a production database. Other stores work the
+same way — set `DATABASE_URL` and add the driver if it isn't Postgres
+(`sqlalchemy-libsql` for Turso, `pymysql` for MySQL).
 
 `vercel dev` runs the app locally through that same entry point, so what you
 test is what ships. Tests and docs stay out of the function bundle via
