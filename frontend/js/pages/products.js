@@ -7,7 +7,7 @@ import { icon } from "../ui/icons.js";
 import { toast, loadingState, openModal, emptyState, confirmAction, openDrawer } from "../ui/feedback.js";
 import { searchBox, segmented, dataTable, pill, tag } from "../ui/widgets.js";
 
-const CATEGORY_COLORS = ["#4f46e5", "#0d9488", "#f59e0b", "#8b5cf6", "#0ea5e9", "#ef4444", "#10b981", "#ec4899"];
+const CATEGORY_COLORS = ["#0a3f6b", "#e21212", "#f59e0b", "#8b5cf6", "#0ea5e9", "#10b981", "#193d81", "#ec4899"];
 
 export async function render(container) {
   const state = { q: "", category: "", kind: "", view: "grid", page: 1, perPage: 24, loading: true, categories: [] };

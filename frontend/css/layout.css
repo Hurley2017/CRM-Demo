@@ -18,9 +18,9 @@
   padding: clamp(32px, 5vw, 72px);
   color: #fff;
   background:
-    radial-gradient(1000px 600px at 15% 10%, rgba(45, 212, 191, .30), transparent 60%),
-    radial-gradient(900px 700px at 90% 90%, rgba(129, 140, 248, .45), transparent 65%),
-    linear-gradient(150deg, var(--brand-950) 0%, var(--brand-900) 45%, var(--brand-800) 100%);
+    radial-gradient(1000px 600px at 15% 10%, rgba(226, 18, 18, .22), transparent 60%),
+    radial-gradient(900px 700px at 90% 90%, rgba(58, 156, 238, .26), transparent 65%),
+    linear-gradient(150deg, var(--brand-700) 0%, var(--brand-800) 45%, var(--brand-950) 100%);
   display: flex;
   align-items: center;
 }
@@ -42,7 +42,7 @@
   width: 420px; height: 420px;
   right: -120px; top: -120px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(45, 212, 191, .40), transparent 70%);
+  background: radial-gradient(circle, rgba(242, 46, 44, .38), transparent 70%);
   filter: blur(12px);
   animation: floaty 14s var(--ease) infinite alternate;
 }
@@ -62,6 +62,14 @@
 }
 .brand-logo strong { display: block; font-size: var(--fs-lg); font-weight: var(--fw-bold); letter-spacing: -.01em; }
 .brand-logo span { display: block; font-size: var(--fs-xs); opacity: .72; letter-spacing: .16em; text-transform: uppercase; }
+.logo-emblem {
+  width: 46px; height: 46px; flex: none;
+  filter: drop-shadow(0 10px 22px rgba(226, 18, 18, .45));
+}
+.sidebar-head .logo-emblem {
+  width: 36px; height: 36px;
+  filter: drop-shadow(0 6px 14px rgba(226, 18, 18, .4));
+}
 
 .brand-headline {
   font-size: clamp(2.4rem, 4.4vw, 3.5rem);
@@ -72,7 +80,7 @@
 }
 .brand-headline em {
   font-style: normal;
-  background: linear-gradient(100deg, var(--accent-400), #a7f3d0);
+  background: linear-gradient(100deg, var(--accent-400), #ffc4bf);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -125,13 +133,13 @@
 .status-dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--accent-400);
-  box-shadow: 0 0 0 0 rgba(45, 212, 191, .7);
+  box-shadow: 0 0 0 0 rgba(246, 92, 90, .7);
   animation: pulse 2.4s infinite;
 }
 @keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(45, 212, 191, .6); }
-  70%  { box-shadow: 0 0 0 10px rgba(45, 212, 191, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(246, 92, 90, .6); }
+  70%  { box-shadow: 0 0 0 10px rgba(246, 92, 90, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(246, 92, 90, 0); }
 }
 
 .login-panel {
@@ -156,11 +164,28 @@
   to   { opacity: 1; transform: none; }
 }
 
+.login-logo { width: 184px; height: auto; margin-bottom: 6px; }
+
+.login-card-head .eyebrow { color: var(--accent-600); }
+
 .login-card-head h2 {
   font-size: var(--fs-3xl);
   font-weight: var(--fw-bold);
   letter-spacing: -.03em;
   margin: 6px 0 4px;
+  color: var(--brand-700);
+}
+
+/* The brand's primary CTA colour on surakshanet.com is red — use it here. */
+.login-card .btn-primary {
+  background: linear-gradient(180deg, var(--accent-500), var(--accent-600));
+  border-color: var(--accent-600);
+  box-shadow: 0 10px 22px -8px rgba(226, 18, 18, .55), inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+.login-card .btn-primary:hover {
+  background: linear-gradient(180deg, var(--accent-600), var(--accent-700));
+  border-color: var(--accent-700);
+  box-shadow: 0 12px 26px -8px rgba(226, 18, 18, .6);
 }
 
 .demo-block {
@@ -214,9 +239,13 @@
 @media (max-width: 1024px) {
   .login-screen { grid-template-columns: 1fr; }
   .login-brand { display: none; }
-  .login-panel { background:
-      radial-gradient(700px 400px at 0% 0%, var(--brand-50), transparent 70%),
-      linear-gradient(180deg, var(--brand-950) 0%, var(--brand-900) 240px, var(--surface) 240px);
+  .login-panel {
+    align-items: start;
+    padding-top: clamp(44px, 9vh, 88px);
+    background:
+      linear-gradient(90deg, var(--brand-700), var(--accent-600)) top / 100% 5px no-repeat,
+      radial-gradient(700px 400px at 100% 0%, var(--brand-50), transparent 70%),
+      var(--surface);
   }
 }
 
@@ -237,8 +266,8 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(600px 320px at 0% 0%, rgba(99, 102, 241, .34), transparent 62%),
-    linear-gradient(180deg, var(--brand-950) 0%, #17153f 60%, #14123a 100%);
+    radial-gradient(600px 320px at 0% 0%, rgba(58, 156, 238, .26), transparent 62%),
+    linear-gradient(180deg, var(--brand-800) 0%, var(--brand-950) 70%);
   color: rgba(255, 255, 255, .82);
   z-index: var(--z-sidebar);
 }
@@ -289,9 +318,9 @@
 .nav-item svg { width: 18px; height: 18px; flex: none; opacity: .85; }
 .nav-item:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .nav-item.active {
-  background: linear-gradient(90deg, rgba(99, 102, 241, .95), rgba(79, 70, 229, .78));
+  background: linear-gradient(90deg, rgba(16, 104, 178, .95), rgba(10, 63, 107, .78));
   color: #fff;
-  box-shadow: 0 6px 18px -8px rgba(99, 102, 241, .9);
+  box-shadow: 0 6px 18px -8px rgba(16, 104, 178, .9);
 }
 .nav-item.active::before {
   content: "";
@@ -326,7 +355,7 @@
   position: absolute;
   right: -30px; top: -30px;
   width: 90px; height: 90px;
-  background: radial-gradient(circle, rgba(45, 212, 191, .35), transparent 70%);
+  background: radial-gradient(circle, rgba(58, 156, 238, .32), transparent 70%);
 }
 .shift-badge {
   display: inline-block;

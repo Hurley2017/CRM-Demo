@@ -123,7 +123,7 @@ export async function render(container) {
         {},
         areaChart(overview.series.map((point) => ({ label: point.label, value: point.revenue })), {
           height: 210,
-          color: "#4f46e5",
+          color: "#0a3f6b",
           format: (value) => money(value, currency),
           id: "rev",
         }),
@@ -155,7 +155,7 @@ export async function render(container) {
         categories.length
           ? barRows(categories.map((row) => ({
               label: row.category, value: row.revenue, display: compactMoney(row.revenue, currency),
-            })), { color: "linear-gradient(90deg, #14b8a6, #0d9488)" })
+            })), { color: "linear-gradient(90deg, #0a3f6b, #1068b2)" })
           : h("p.muted", { text: "No data in this range." })));
 
     const staffCard = h("div.card", {},

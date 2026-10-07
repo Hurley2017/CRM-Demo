@@ -4,13 +4,13 @@
 
 import { h, esc } from "./dom.js";
 
-const COLORS = ["#4f46e5", "#14b8a6", "#f59e0b", "#8b5cf6", "#0ea5e9", "#ef4444", "#10b981"];
+const COLORS = ["#0a3f6b", "#e21212", "#f59e0b", "#8b5cf6", "#0ea5e9", "#ec4899", "#10b981"];
 
 /**
  * Area + line chart.
  * data: [{ label, value }]
  */
-export function areaChart(data, { height = 190, color = "#4f46e5", format = (v) => v, id = "" } = {}) {
+export function areaChart(data, { height = 190, color = "#0a3f6b", format = (v) => v, id = "" } = {}) {
   const width = 720;
   const pad = { top: 16, right: 8, bottom: 26, left: 8 };
   const values = data.map((d) => Number(d.value) || 0);

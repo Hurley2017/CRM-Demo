@@ -33,7 +33,7 @@
   background: linear-gradient(180deg, var(--brand-600), var(--brand-700));
   color: #fff;
   border-color: var(--brand-700);
-  box-shadow: 0 6px 16px -8px rgba(79, 70, 229, .85), inset 0 1px 0 rgba(255, 255, 255, .16);
+  box-shadow: 0 6px 16px -8px rgba(10, 63, 107, .85), inset 0 1px 0 rgba(255, 255, 255, .16);
 }
 .btn-primary:hover { background: linear-gradient(180deg, var(--brand-500), var(--brand-600)); box-shadow: var(--sh-brand); }
 
@@ -41,7 +41,7 @@
   background: linear-gradient(180deg, var(--accent-500), var(--accent-600));
   color: #fff;
   border-color: var(--accent-600);
-  box-shadow: 0 6px 16px -8px rgba(13, 148, 136, .8);
+  box-shadow: 0 6px 16px -8px rgba(226, 18, 18, .8);
 }
 
 .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-600); }
@@ -149,7 +149,7 @@
 .input:focus, .select:focus, .textarea:focus {
   outline: none;
   border-color: var(--brand-500);
-  box-shadow: 0 0 0 3.5px rgba(99, 102, 241, .16);
+  box-shadow: 0 0 0 3.5px rgba(16, 104, 178, .16);
 }
 .input[aria-invalid="true"], .select[aria-invalid="true"] {
   border-color: var(--danger-500);
@@ -348,7 +348,7 @@
   color: var(--ink-600);
 }
 .tag-sample { background: #fdf4ff; color: #a21caf; }
-.tag-done { background: rgba(79, 70, 229, .1); color: var(--brand-600, #4338ca); }
+.tag-done { background: rgba(10, 63, 107, .1); color: var(--brand-600, #0a3f6b); }
 
 /* -------------------------------------------------------------- tables -- */
 
@@ -483,7 +483,7 @@
   background: var(--brand-600);
   border-color: var(--brand-600);
   color: #fff;
-  box-shadow: 0 4px 12px -6px rgba(79, 70, 229, .9);
+  box-shadow: 0 4px 12px -6px rgba(10, 63, 107, .9);
 }
 
 /* -------------------------------------------------------- dropdowns ----- */

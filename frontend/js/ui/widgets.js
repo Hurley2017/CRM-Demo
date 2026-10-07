@@ -312,8 +312,8 @@ export function bookingRowMeta(booking) {
 
 export function kpiCard({ label, value, foot, iconName, tone = "brand", onClick }) {
   const tones = {
-    brand: { bg: "#eef2ff", fg: "#4f46e5", tint: "rgba(99,102,241,.12)" },
-    accent: { bg: "#ccfbf1", fg: "#0d9488", tint: "rgba(20,184,166,.14)" },
+    brand: { bg: "#e9f1f8", fg: "#0a3f6b", tint: "rgba(10,63,107,.12)" },
+    accent: { bg: "#fdeaea", fg: "#e21212", tint: "rgba(226,18,18,.12)" },
     warning: { bg: "#fffbeb", fg: "#b45309", tint: "rgba(245,158,11,.16)" },
     danger: { bg: "#fef2f2", fg: "#b91c1c", tint: "rgba(239,68,68,.14)" },
     success: { bg: "#ecfdf5", fg: "#047857", tint: "rgba(16,185,129,.15)" },

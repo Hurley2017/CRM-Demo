@@ -120,7 +120,7 @@ export async function render(container) {
       {},
       areaChart(data.revenue_trend, {
         height: 190,
-        color: "#4f46e5",
+        color: "#0a3f6b",
         format: (value) => money(value, currency),
         id: "dash",
       }),
@@ -216,7 +216,7 @@ function buildStatusMix(mix) {
   const segments = meaningful.map((row) => ({
     label: STATUS_LABELS[row.status] || row.status,
     value: row.count,
-    color: STATUS_COLORS[row.status] || "#4f46e5",
+    color: STATUS_COLORS[row.status] || "#0a3f6b",
   }));
   const total = segments.reduce((sum, s) => sum + s.value, 0);
   return donutChart(segments, { size: 156, thickness: 18, label: "bookings", sub: String(total) });
