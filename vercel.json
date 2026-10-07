@@ -6,5 +6,11 @@
       "includeFiles": "frontend/**",
       "excludeFiles": "{tests/**,.pytest_cache/**,**/__pycache__/**,*.md,.env.example}"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index?__sd_path=/$1"
+    }
+  ]
 }

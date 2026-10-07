@@ -40,6 +40,12 @@ SCRIPT = textwrap.dedent(
         "deep_link": client.get("/bookings").status_code,
         "css": client.get("/css/tokens.css").status_code,
         "js": client.get("/js/app.js").status_code,
+        # Vercel's catch-all rewrite hands the function either the original
+        # path or /api/index plus __sd_path=... - both must route alike.
+        "rewrite_spa": client.get("/api/index?__sd_path=/bookings&tab=visits").status_code,
+        "rewrite_api": client.get("/api/index?__sd_path=/api/auth/me").status_code,
+        "rewrite_idem": client.get("/bookings?__sd_path=/bookings").status_code,
+        "direct": client.get("/api/index").status_code,
         "login": login.status_code,
         "me": me.status_code,
         "dashboard": client.get(
@@ -78,6 +84,12 @@ def test_vercel_entry_seeds_and_serves(tmp_path):
     assert result["deep_link"] == 200
     assert result["css"] == 200
     assert result["js"] == 200
+    assert result["rewrite_spa"] == 200
+    # The real auth endpoint answers 200 (session in the test cookie jar) or
+    # 401 (no session) - never the JSON 404 a mis-routed /api/index would give.
+    assert result["rewrite_api"] in (200, 401)
+    assert result["rewrite_idem"] == 200
+    assert result["direct"] == 200
     assert result["login"] == 200
     assert result["me"] == 200
     assert result["dashboard"] == 200

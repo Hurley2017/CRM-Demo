@@ -17,6 +17,7 @@ durable cloud database (Turso, Neon, Supabase, ...) - nothing else changes.
 import os
 import sys
 import tempfile
+from urllib.parse import unquote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
@@ -45,6 +46,53 @@ from backend import create_app  # noqa: E402  (needs DATABASE_URL set first)
 from backend.models import User, db  # noqa: E402
 
 app = create_app()
+
+
+def _apply_original_path(environ):
+    """Restore the visitor's real path after a Vercel rewrite.
+
+    ``vercel.json`` routes every request through a catch-all rewrite that
+    appends the original path as ``__sd_path`` (``/patients/42`` becomes
+    ``/api/index?__sd_path=/patients/42``).  Depending on Vercel's internal
+    routing the function may observe either the original path or the
+    rewrite destination (``/api/index``); normalising here makes both
+    deliveries behave identically, and the leftover query string stays
+    intact so API filters keep working.  No-op outside Vercel.
+    """
+    if not ON_VERCEL:
+        return
+    query = environ.get("QUERY_STRING") or ""
+    kept, original = [], None
+    for part in query.split("&"):
+        if part.startswith("__sd_path="):
+            original = part[len("__sd_path="):]
+        elif part:
+            kept.append(part)
+    if original is None:
+        # Direct invocation of the function route without a rewrite:
+        # treat it as the SPA entry point.
+        if environ.get("PATH_INFO", "").rstrip("/") in ("/api/index", "/api/index.py"):
+            environ["PATH_INFO"] = "/"
+        return
+    path = unquote(original)
+    if not path.startswith("/"):
+        path = "/" + path
+    environ["PATH_INFO"] = path
+    environ["QUERY_STRING"] = "&".join(kept)
+
+
+class _RewrittenPathMiddleware:
+    """WSGI wrapper that applies :func:`_apply_original_path` before Flask routes."""
+
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        _apply_original_path(environ)
+        return self.wsgi_app(environ, start_response)
+
+
+app.wsgi_app = _RewrittenPathMiddleware(app.wsgi_app)
 
 
 def _seed_demo_data():
