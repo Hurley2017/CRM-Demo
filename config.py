@@ -19,6 +19,15 @@ def _default_database_url() -> str:
     return f"sqlite:///{path}"
 
 
+def _database_url() -> str:
+    url = (os.environ.get("DATABASE_URL") or "").strip()
+    # Managed Postgres integrations (Neon, Vercel Postgres, ...) still emit
+    # the legacy scheme; SQLAlchemy 2 removed the `postgres://` alias.
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://"):]
+    return url or _default_database_url()
+
+
 class Config:
     """Base configuration shared by every environment."""
 
@@ -26,7 +35,7 @@ class Config:
 
     # Single source of truth for the database. Flip this one value to move
     # from local SQLite to a managed cloud database - no code changes.
-    DATABASE_URL = os.environ.get("DATABASE_URL") or _default_database_url()
+    DATABASE_URL = _database_url()
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -37,7 +46,12 @@ class Config:
     # --- sessions / cookies -------------------------------------------------
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
-    SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "0") == "1"
+    # Vercel (and any HTTPS deployment) should mark the cookie Secure unless
+    # the operator overrides it explicitly.
+    SESSION_COOKIE_SECURE = (
+        os.environ.get("SESSION_COOKIE_SECURE", "1" if os.environ.get("VERCEL") else "0")
+        == "1"
+    )
     PERMANENT_SESSION_LIFETIME = 60 * 60 * 12  # 12 hours
 
     # --- CORS (only relevant when the SPA is hosted separately) -------------

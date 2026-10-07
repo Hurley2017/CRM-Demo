@@ -103,7 +103,9 @@ frontend/
 config.py              environment-driven configuration
 seed.py                rich demo dataset (safe to re-run, --force to reset)
 run.py                 development server
-tests/                 pytest suite — 64 tests
+api/index.py           Vercel serverless entry point (same app factory)
+vercel.json            function config + bundle exclusions
+tests/                 pytest suite — 66 tests
 pytest.ini             test paths + import root
 ```
 
@@ -136,7 +138,7 @@ Copy `.env.example` to `.env`. Everything is optional locally.
 | `SECRET_KEY` | dev key | Session signing — **set a long random value in production** |
 | `DATABASE_URL` | `sqlite:///…/suraksha.db` | The one switch for moving to a managed database |
 | `TIMEZONE` | `Asia/Kolkata` | Calendar/"today"/slot maths for the centre |
-| `SESSION_COOKIE_SECURE` | `0` | Set `1` behind HTTPS |
+| `SESSION_COOKIE_SECURE` | `0` (`1` on Vercel) | Set `1` behind HTTPS |
 | `CORS_ORIGINS` | empty | Only needed if the API is hosted separately |
 
 Timestamps are stored in **UTC**; dates, availability and the cancellation
@@ -161,10 +163,56 @@ gunicorn -w 4 -b 0.0.0.0:8000 run:app
 
 ---
 
+## Deploying to Vercel
+
+Vercel's zero-configuration Flask support picks up `api/index.py`, which exposes
+the same `create_app()` factory `run.py` uses — one function serves the JSON
+API, the SPA and every static asset.
+
+```bash
+npm i -g vercel        # or prefix the commands with `npx`
+vercel                 # first run: log in, create the project, deploy
+vercel --prod          # promote the deployment to production
+```
+
+Prefer Git? Push to GitHub and import the repo at vercel.com/new — detection
+finds Flask from `requirements.txt` and the entry point from `api/index.py`.
+
+**Environment variables** (Project → Settings → Environment Variables):
+
+| Variable | Required | Notes |
+|---|---|---|
+| `SECRET_KEY` | **yes** | Long random string — signs the session cookie |
+| `DATABASE_URL` | no | Durable database; see below |
+| `TIMEZONE` | no | Defaults to `Asia/Kolkata` |
+| `SESSION_COOKIE_SECURE` | no | Defaults to `1` on Vercel (HTTPS) |
+| `CORS_ORIGINS` | no | Not needed — API and SPA share the origin |
+
+**How the database works on Vercel.** The deployment bundle is read-only, so
+without a `DATABASE_URL` the entry point points SQLite at `/tmp/suraksha.db`
+and, on first boot, seeds the full demo dataset (about 3 s — one transaction,
+safe against concurrent cold starts). `/tmp` lives for the lifetime of one
+function instance, so **data resets on cold starts**: perfect for a demo, not
+for production.
+
+For durable data set `DATABASE_URL` to a managed database (Neon, Supabase,
+Turso, …) and add its driver to `requirements.txt` (e.g. `psycopg[binary]` for
+Postgres, `sqlalchemy-libsql` for Turso). The legacy `postgres://` scheme is
+normalised to `postgresql://` automatically. A first boot against an *empty*
+cloud database seeds the demo dataset too — sign in with
+`EMP-1001 / Admin@123`, then change the passwords.
+
+`vercel dev` runs the app locally through that same entry point, so what you
+test is what ships. Tests and docs stay out of the function bundle via
+`excludeFiles` (`vercel.json`) for Git deploys and `.vercelignore` for CLI
+deploys.
+
+---
+
 ## Tests
 
 ```bash
-python -m pytest          # 64 tests, ~20s
+python -m pytest          # 66 tests, ~15s
 ```
 
 The suite runs against a throw-away seeded database (never `suraksha.db`) and
@@ -178,6 +226,8 @@ covers:
 - `test_operations.py` — billing (payment → refund), dashboard, reports, CSV
   export, settings, notifications, audit
 - `test_services.py` — timezone-sensitive availability and cancellation policy
+- `test_vercel_entry.py` — serverless bootstrap: writable DB path, first-boot
+  demo seed, SPA + API served through `api/index.py`
 
 ---
 

@@ -1,0 +1,21 @@
+# Uploaded by `vercel` CLI deploys (Git deploys use .gitignore + vercel.json
+# excludeFiles instead). Keeps the function bundle lean and secrets out.
+.vercel
+.git
+.github
+.venv
+venv
+env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+tests/
+*.db
+*.sqlite3
+*.sqlite
+.env
+.idea/
+.vscode/
+node_modules/
+.DS_Store
+Thumbs.db
