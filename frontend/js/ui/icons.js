@@ -86,6 +86,8 @@ const PATHS = {
     '<rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5h.01M18 14.5h.01"/>',
   activity:
     '<path d="M3 12h4l2.5-7 4.5 14 2.5-7H21"/>',
+  heartbeat:
+    '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   star: '<path d="m12 3.8 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 10l5.9-.9z"/>',
   award:
     '<circle cx="12" cy="9" r="5.5"/><path d="m8.2 13.6-1.4 7 5.2-2.7 5.2 2.7-1.4-7"/>',

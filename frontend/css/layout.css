@@ -86,6 +86,35 @@
   color: transparent;
 }
 
+/* heartbeat pulse tile under the headline */
+.brand-heartbeat {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  margin: -6px 0 var(--sp-4);
+  color: var(--accent-400);
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: 0 12px 28px -16px rgba(242, 46, 44, .9), inset 0 1px 0 rgba(255, 255, 255, .14);
+}
+.brand-heartbeat svg {
+  width: 26px;
+  height: 26px;
+  animation: hb-thump 2.6s ease-in-out infinite;
+}
+@keyframes hb-thump {
+  0%, 100% { transform: scale(1); }
+  8%  { transform: scale(1.16); }
+  16% { transform: scale(1); }
+  26% { transform: scale(1.1); }
+  36% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-heartbeat svg { animation: none; }
+}
+
 .brand-sub {
   font-size: var(--fs-lg);
   color: rgba(255, 255, 255, .78);
@@ -167,6 +196,14 @@
 .login-logo { width: 184px; height: auto; margin-bottom: 6px; }
 
 .login-card-head .eyebrow { color: var(--accent-600); }
+.eyebrow-heart {
+  display: inline-grid;
+  place-items: center;
+  margin-right: 6px;
+  vertical-align: -2px;
+  color: var(--accent-500);
+}
+.eyebrow-heart svg { width: 14px; height: 14px; }
 
 .login-card-head h2 {
   font-size: var(--fs-3xl);
